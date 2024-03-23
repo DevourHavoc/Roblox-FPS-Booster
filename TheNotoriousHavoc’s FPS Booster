@@ -270,7 +270,7 @@ coroutine.wrap(pcall)(function()
         settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level04
         if _G.SendNotifications then
             StarterGui:SetCore("SendNotification", {
-                Title = "discord.gg/rips",
+                Title = "Made by TheNotoriousHavoc",
                 Text = "Low Rendering Enabled",
                 Duration = 5,
                 Button1 = "Okay"
@@ -320,7 +320,7 @@ coroutine.wrap(pcall)(function()
                 setfpscap(1e6)
                 if _G.SendNotifications then
                     StarterGui:SetCore("SendNotification", {
-                        Title = "discord.gg/rips",
+                        Title = "Made by TheNotoriousHavoc",
                         Text = "FPS Uncapped",
                         Duration = 5,
                         Button1 = "Okay"
@@ -332,7 +332,7 @@ coroutine.wrap(pcall)(function()
             end
         else
             StarterGui:SetCore("SendNotification", {
-                Title = "discord.gg/rips",
+                Title = "Made by TheNotoriousHavoc",
                 Text = "FPS Cap Failed",
                 Duration = math.huge,
                 Button1 = "Okay"
