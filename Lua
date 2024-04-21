@@ -64,7 +64,7 @@ if not _G.Settings then
             ["No Clothes"] = true,
             ["Low Water Graphics"] = true,
             ["No Shadows"] = true,
-            ["Low Rendering"] = false,
+            ["Low Rendering"] = true,
             ["Low Quality Parts"] = true,
             ["Low Quality Models"] = true,
             ["Reset Materials"] = true,
